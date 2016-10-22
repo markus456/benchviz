@@ -1,0 +1,19 @@
+{
+  "name": "benchviz",
+  "version": "1.0.0",
+  "description": "Benchmark and test result visualizer for MaxScale",
+  "main": "benchviz.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "benchmark",
+    "visualization",
+    "MaxScale"
+  ],
+  "dependencies": [
+    "express"
+  ],
+  "author": "Markus Mäkelä",
+  "license": "GPL-3.0"
+}
