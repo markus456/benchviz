@@ -67,44 +67,77 @@ d3.json(query, (err, obj) => {
         .attr("stroke", "blue")
         .attr("fill", "none")
 
-    var tooltip = g.append("text")
-        .attr("y", 15)
-        .attr("dy", "0.5em")
-        .attr("fill", "black")
-        .attr("display", "none")
-
-    // Padding for the tooltip
-    const padX = -30
-    const padY = -35
-
     // Each test run is displayed as a circle
     var circle = g.selectAll("circle")
         .data(obj)
 
     circle.exit().remove()
 
-    circle.enter()
+    circle = circle.enter()
         .append("circle")
         .attr("r", "5")
         .attr("cx", (d) => { return xScale(new Date(d.start_time)); })
         .attr("cy", (d) => { return yScale(d.failed_tests); })
         .attr("fill", "blue")
         .attr("fill", "blue")
-        .on("mouseover", (d, i, n) => {
-            tooltip.attr("display", "block")
-                .text("" + d.target + " " + d.failed_tests + " failed tests")
+        .merge(circle)
 
-            var mouse = d3.mouse(n[i])
-            tooltip.attr("transform", "translate(" + (mouse[0] + padX) + "," + (mouse[1] + padY) + ")")
-        })
+
+    var bgWidth = 0,
+        bgHeight = 0;
+
+    // This is the group for the tooltip
+    var tooltip = g.append("g")
+        .attr("display", "none")
+
+    // Add a background rectangle for the tooltip
+    tooltip.append("rect")
+        .attr("fill", "steelblue")
+        .attr("rx", "0.3em")
+        .attr("ry", "0.3em")
+
+    // Padding for the tooltip
+    const padX = 10
+    const padY = 10
+
+    circle.on("mouseover", (d, i, n) => {
+        var tt_text = tooltip.attr("display", "block")
+            .selectAll("text")
+            .data([
+                d.target,
+                d.failed_tests + " failed tests",
+                d.start_time,
+                d.maxscale_commit_id
+            ])
+
+        tt_text.enter()
+            .append("text")
+            .attr("y", "1.1em")
+            .attr("x", "0.15em")
+            .attr("dy", (d, i) => {return (1 * i) + "em"})
+            .attr("fill", "black")
+            .merge(tt_text)
+            .text((d) => {return d})
+
+        var texts = tooltip.selectAll("text")
+
+        bgWidth = d3.max(texts.nodes(), (d, i, n) => {return n[i].getBBox().width;})
+        bgHeight = d3.max(texts.nodes(), (d, i, n) => {return n[i].getBBox().height;}) * (texts.size() + 1)
+
+        var rect = tooltip.select("rect")
+            .attr("width", bgWidth + padX / 2)
+            .attr("height", bgHeight + padY / 2)
+
+        var mouse = d3.mouse(n[i])
+        tooltip.attr("transform", "translate(" + (mouse[0] - (bgWidth + padX)) + "," + (mouse[1] - (bgHeight + padY)) + ")")
+    })
         .on("mouseout", () => {
             tooltip.attr("display", "none")
         })
         .on("mousemove", (d, i, n) => {
             var mouse = d3.mouse(n[i])
-            tooltip.attr("transform", "translate(" + (mouse[0] + padX) + "," + (mouse[1] + padY) + ")")
+            tooltip.attr("transform", "translate(" + (mouse[0] - (bgWidth + padX)) + "," + (mouse[1] - (bgHeight + padY)) + ")")
         })
-        .merge(circle)
 
     // Add a legend to the chart
     g.append("text")
