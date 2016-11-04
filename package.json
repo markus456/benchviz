@@ -12,7 +12,9 @@
     "MaxScale"
   ],
   "dependencies": [
-    "express"
+    "express",
+    "mysql",
+    "config"
   ],
   "author": "Markus Mäkelä",
   "license": "GPL-3.0"

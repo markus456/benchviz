@@ -1,21 +1,12 @@
 var express = require('express')
 var mysql   = require('mysql')
+var config  = require('config')
 var app     = express()
-const port  = 8080
 
-const my_user     = 'maxuser'
-const my_password = 'maxpwd'
-const my_host     = 'localhost'
-const my_port     = 3000
-const my_db       = 'test'
+dbConfig = config.get("dbConfig")
+appConfig = config.get("appConfig")
 
-var conn = mysql.createConnection({
-    host     : my_host,
-    port     : my_port,
-    user     : my_user,
-    password : my_password,
-    database : my_db
-});
+var conn = mysql.createConnection(dbConfig);
 
 app.get('/', (req, res) => {
 
@@ -32,7 +23,7 @@ app.get('/', (req, res) => {
     conn.query(query, (err, rows) => {
         if (err) {
             console.log(err)
-            res.send()
+            res.send("Error")
         } else {
             res.setHeader("Access-Control-Allow-Origin", "*");
             res.send(rows)
@@ -40,4 +31,4 @@ app.get('/', (req, res) => {
     })
 })
 
-app.listen(port, "localhost")
+app.listen(appConfig.port, appConfig.host)

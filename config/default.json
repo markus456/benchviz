@@ -1,0 +1,13 @@
+{
+    "dbConfig": {
+        "user": "maxuser",
+        "password": "maxpwd",
+        "host": "localhost",
+        "port": 3000,
+        "database": "test"
+    },
+    "appConfig": {
+        "host": "localhost",
+        "port": 8080
+    }
+}
