@@ -1,5 +1,6 @@
 {
   "name": "benchviz",
+  "repository": "https://github.com/markus456/benchviz",
   "version": "1.0.0",
   "description": "Benchmark and test result visualizer for MaxScale",
   "main": "benchviz.js",
